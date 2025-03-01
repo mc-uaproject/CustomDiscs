@@ -4,6 +4,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public enum Lang {
     PREFIX("prefix", "&8[&6CustomDiscs&8]&r"),
+    PLAYER_NOT_FOUND("player-not-found", "&rPlayer not found!"),
+    TOKEN_GRANTED_OTHER("token-granted-other", "&aToken granted to &7%player%&a!"),
+    TOKEN_GRANTED("token-granted", "&aToken granted!"),
+    NO_TOKEN("no-token", "&rYou do not have a token in your inventory."),
     NO_PERMISSION("no-permission", "&rYou do not have permission to execute this command."),
     INVALID_FILENAME("invalid-filename", "&rThis is an invalid filename!"),
     INVALID_FORMAT("invalid-format", "&rFile must be in wav, flac, or mp3 format!"),
@@ -17,9 +21,9 @@ public enum Lang {
     SUCCESSFUL_DOWNLOAD("successful-download", "&aFile successfully downloaded to &7%file_path%&a."),
     CREATE_DISC("create-disc", "&aCreate a disc by doing &7/cd create filename.extension \"Custom Lore\"&a."),
     DOWNLOAD_ERROR("download-error", "&rAn error has occurred while downloading."),
-    NOW_PLAYING("now-playing","&6Now playing: %song_name%"),
+    NOW_PLAYING("now-playing", "&6Now playing: %song_name%"),
     DISC_CONVERTED("disc-converted", "&aConverted disc to new format! &fThis is due to changes in newer Minecraft versions which introduced &7JukeboxPlayableComponent&f."),
-    INVALID_RANGE("invalid-range","&rYou need to chose a range between 1 and %range_value%"),
+    INVALID_RANGE("invalid-range", "&rYou need to chose a range between 1 and %range_value%"),
     CREATE_CUSTOM_RANGE("create-custom-range", "&7Your range is set to: &a\"%custom_range%\".");
 
     private final String path;
@@ -28,7 +32,8 @@ public enum Lang {
 
     /**
      * Lang enum constructor.
-     * @param path The string path.
+     *
+     * @param path  The string path.
      * @param start The default string.
      */
     Lang(String path, String start) {
@@ -38,6 +43,7 @@ public enum Lang {
 
     /**
      * Set the {@code YamlConfiguration} to use.
+     *
      * @param config The config to set.
      */
     public static void setFile(YamlConfiguration config) {
@@ -53,6 +59,7 @@ public enum Lang {
 
     /**
      * Get the default value of the path.
+     *
      * @return The default value of the path.
      */
     public String getDefault() {
@@ -61,6 +68,7 @@ public enum Lang {
 
     /**
      * Get the path to the string.
+     *
      * @return The path to the string.
      */
     public String getPath() {

@@ -1,4 +1,5 @@
 prefix: "&8[&6CustomDiscs&8]&r"
+no-token: "&cYou must have a token to execute this command."
 no-permission: "&cYou do not have permission to execute this command."
 invalid-filename: "&cThis is an invalid filename!"
 no-disc-name-provided: "&cYou must provide a name for your disc."
