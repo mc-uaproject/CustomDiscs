@@ -1,5 +1,8 @@
-package me.Navoei.customdiscsplugin;
+package me.Navoei.customdiscsplugin.listeners;
 
+import me.Navoei.customdiscsplugin.CustomDiscs;
+import me.Navoei.customdiscsplugin.PlayerManager;
+import me.Navoei.customdiscsplugin.VoicePlugin;
 import me.Navoei.customdiscsplugin.language.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;

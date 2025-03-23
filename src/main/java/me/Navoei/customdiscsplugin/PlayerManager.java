@@ -1,7 +1,6 @@
 package me.Navoei.customdiscsplugin;
 
 import de.maxhenkel.voicechat.api.ServerPlayer;
-import de.maxhenkel.voicechat.api.VoicechatConnection;
 import de.maxhenkel.voicechat.api.VoicechatServerApi;
 import de.maxhenkel.voicechat.api.audiochannel.AudioChannel;
 import de.maxhenkel.voicechat.api.audiochannel.AudioPlayer;
@@ -19,10 +18,8 @@ import org.jflac.sound.spi.FlacAudioFileReader;
 
 import javax.annotation.Nullable;
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
@@ -159,7 +156,7 @@ public class PlayerManager {
         return finalInputStream;
     }
 
-    private static short[] readSoundFile(AudioInputStream inputStream) throws IOException {
+    public static short[] readSoundFile(AudioInputStream inputStream) throws IOException {
         byte[] audioPacket = getAudioPacket(inputStream);
         if (audioPacket == null) return null;
         return VoicePlugin.voicechatApi.getAudioConverter().bytesToShorts(audioPacket);
@@ -167,6 +164,9 @@ public class PlayerManager {
 
     private static byte[] getAudioPacket(AudioInputStream inputStream) throws IOException {
         byte[] audioPacket = inputStreamToPackets(inputStream);
+        if (audioPacket == null) {
+            return null;
+        }
         return adjustVolume(audioPacket, CustomDiscs.getInstance().musicDiscVolume);
     }
 
@@ -254,9 +254,9 @@ public class PlayerManager {
         void stop();
     }
 
-    private record PlayerReference(Stoppable onStop,
-                                   AtomicReference<de.maxhenkel.voicechat.api.audiochannel.AudioPlayer> player,
-                                   Path soundFilePath) {
+    public record PlayerReference(Stoppable onStop,
+                                  AtomicReference<de.maxhenkel.voicechat.api.audiochannel.AudioPlayer> player,
+                                  Path soundFilePath) {
     }
 
 }

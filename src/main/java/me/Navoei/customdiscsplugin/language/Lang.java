@@ -24,7 +24,12 @@ public enum Lang {
     NOW_PLAYING("now-playing", "&6Now playing: %song_name%"),
     DISC_CONVERTED("disc-converted", "&aConverted disc to new format! &fThis is due to changes in newer Minecraft versions which introduced &7JukeboxPlayableComponent&f."),
     INVALID_RANGE("invalid-range", "&rYou need to chose a range between 1 and %range_value%"),
-    CREATE_CUSTOM_RANGE("create-custom-range", "&7Your range is set to: &a\"%custom_range%\".");
+    CREATE_CUSTOM_RANGE("create-custom-range", "&7Your range is set to: &a\"%custom_range%\"."),
+    PORTABLE_PLAYER_CRAFTED("portable-player-crafted", "&aYou crafted portable player!"),
+    NO_DISCS_IN_INVENTORY("no-discs", "&cThere`s no custom discs in your inventory!"),
+    NOW_PLAYING_PORTABLE("now-playing-portable", "&6Playing: %song_name%"),
+    STOPPED_PLAYING("stopped-playing", "&cPlaying paused!"),
+    PLAYER_NOT_HOLDING_PLAYER("not-holding-player", "&cYou have to hold portable player!");
 
     private final String path;
     private final String def;
@@ -55,6 +60,10 @@ public enum Lang {
         if (this == PREFIX)
             return LANG.getString(this.path, def) + " ";
         return LANG.getString(this.path, def);
+    }
+
+    public String replace(String placeholder, String replacement) {
+        return this.toString().replace(placeholder, replacement);
     }
 
     /**
