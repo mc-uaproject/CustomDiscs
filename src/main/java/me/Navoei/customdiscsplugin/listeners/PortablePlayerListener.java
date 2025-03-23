@@ -96,7 +96,6 @@ public class PortablePlayerListener implements Listener {
 
 
             portablePlayerManager.playAudio(VoicePlugin.voicechatServerApi, soundFilePath, player, customActionBarSongPlaying, range);
-            player.sendMessage("програється");
             player.closeInventory();
             return;
         }

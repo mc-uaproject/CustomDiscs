@@ -30,3 +30,4 @@ commands:
     usage: /<command> <filename> <custom name>
     permission: customdiscs.disc
   tc:
+    description: Grant a token. For Operators only.
