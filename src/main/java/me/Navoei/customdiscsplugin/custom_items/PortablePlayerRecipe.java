@@ -38,8 +38,8 @@ public class PortablePlayerRecipe {
 
         ShapedRecipe voidTotemRecipe = new ShapedRecipe(portablePlayerKey, portablePlayer);
         voidTotemRecipe.shape(
+                "III",
                 "IDI",
-                "ITI",
                 "PPP");
 
         RecipeChoice planksChoice = new RecipeChoice.MaterialChoice(
@@ -51,10 +51,7 @@ public class PortablePlayerRecipe {
                 Material.DARK_OAK_PLANKS
         );
 
-        ItemStack token = TokenItem.getToken();
-
         voidTotemRecipe.setIngredient('D', Material.DIAMOND);
-        voidTotemRecipe.setIngredient('T', token);
         voidTotemRecipe.setIngredient('P', planksChoice);
         voidTotemRecipe.setIngredient('I', Material.IRON_INGOT);
 
