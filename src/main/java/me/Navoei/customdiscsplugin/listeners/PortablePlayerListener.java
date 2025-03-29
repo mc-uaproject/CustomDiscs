@@ -115,6 +115,7 @@ public class PortablePlayerListener implements Listener {
     }
 
     private boolean isPortablePlayer(ItemStack item) {
+        if(!item.hasItemMeta()) return false;
         return item.getItemMeta().getPersistentDataContainer()
                 .has(new NamespacedKey(plugin, "portable_player"));
     }
