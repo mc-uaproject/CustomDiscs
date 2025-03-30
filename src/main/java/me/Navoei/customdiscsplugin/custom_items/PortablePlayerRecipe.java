@@ -1,5 +1,8 @@
 package me.Navoei.customdiscsplugin.custom_items;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -29,8 +32,8 @@ public class PortablePlayerRecipe {
         );
 
         if (portablePlayerMeta != null) {
-            portablePlayerMeta.setDisplayName("Портативний програвач");
-            portablePlayerMeta.setCustomModelData(1);
+            portablePlayerMeta.displayName(Component.text("Портативний Програвач").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GREEN));
+            portablePlayerMeta.setItemModel(new NamespacedKey(pluginPortablePlayerRecipe, "portable_player"));
             portablePlayer.setItemMeta(portablePlayerMeta);
         }
 
