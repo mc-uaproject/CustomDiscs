@@ -1,4 +1,4 @@
-package me.Navoei.customdiscsplugin.custom_items;
+package me.Navoei.customdiscsplugin.portable;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

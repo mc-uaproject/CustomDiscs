@@ -27,7 +27,21 @@ public enum Lang {
     CREATE_CUSTOM_RANGE("create-custom-range", "&7Ваш діапазон встановлено на: &a\"%custom_range%\"."),
     NO_DISCS_IN_INVENTORY("no-discs", "&cУ вашому інвентарі немає кастомних дисків!"),
     NOW_PLAYING_PORTABLE("now-playing-portable", "&6Грає: %song_name%"),
-    STOPPED_PLAYING("stopped-playing", "&cВідтворення призупинено!");
+    STOPPED_PLAYING("stopped-playing", "&cВідтворення призупинено!"),
+    TOKEN_FOUND("token-found", "&aТокен знайдено! Обробка вашого запиту..."),
+    CREATING_DISC("creating-disc", "&7Створення диску з назвою: &f%song_name%"),
+    SUPPORTED_FORMATS("supported-formats", "&7Підтримувані формати: &fwav, mp3, flac"),
+    URL_INFO("url-info", "&7URL: &f%url%"),
+    FILENAME_INFO("filename-info", "&7Ім'я файлу: &f%filename%"),
+    FILE_SIZE_INFO("file-size-info", "&7Розмір файлу: &f%size% МБ"),
+    CREATING_DISC_ITEM("creating-disc-item", "&aСтворення елементу диску..."),
+    INVENTORY_FULL("inventory-full", "&cІнвентар заповнений! &aДиск викинуто біля вас."),
+    DISC_ADDED("disc-added", "&aДиск додано до вашого інвентарю!"),
+    TOKEN_USED("token-used", "&aТокен використано."),
+    DISC_CREATED("disc-created", "&aКастомний диск успішно створено!"),
+    ERROR_DETAILS("error-details", "&cДеталі помилки: &f%error%"),
+    CHECK_URL("check-url", "&cПеревірте, будь ласка, що URL-адреса правильна і файл доступний."),
+    TOKEN_REQUIRED("token-required", "&cВам потрібен токен, щоб створити кастомний диск. Запитайте адміністратора.");
 
     private final String path;
     private final String def;

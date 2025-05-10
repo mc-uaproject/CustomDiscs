@@ -1,9 +1,7 @@
-package me.Navoei.customdiscsplugin.utils;
+package me.Navoei.customdiscsplugin.portable;
 
 import me.Navoei.customdiscsplugin.command.CustomDiscCommand;
-import me.Navoei.customdiscsplugin.language.Lang;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

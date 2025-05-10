@@ -11,15 +11,14 @@ import de.maxhenkel.voicechat.api.*;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import me.Navoei.customdiscsplugin.command.CustomDiscCommand;
-import me.Navoei.customdiscsplugin.command.TokenCommand;
 import me.Navoei.customdiscsplugin.command.TokenDiscCommand;
-import me.Navoei.customdiscsplugin.custom_items.PortablePlayerRecipe;
+import me.Navoei.customdiscsplugin.portable.PortablePlayerRecipe;
 import me.Navoei.customdiscsplugin.event.JukeBox;
 import me.Navoei.customdiscsplugin.language.Lang;
 import me.Navoei.customdiscsplugin.listeners.HopperManager;
 import me.Navoei.customdiscsplugin.listeners.PortablePlayerListener;
-import me.Navoei.customdiscsplugin.utils.PortablePlayerManager;
-import me.Navoei.customdiscsplugin.utils.PortablePlayerMenu;
+import me.Navoei.customdiscsplugin.portable.PortablePlayerManager;
+import me.Navoei.customdiscsplugin.portable.PortablePlayerMenu;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Jukebox;
 import org.bukkit.command.CommandSender;
@@ -116,9 +115,6 @@ public final class CustomDiscs extends JavaPlugin {
 
         PortablePlayerRecipe recipe = new PortablePlayerRecipe(this);
         recipe.registerRecipes();
-
-        TokenCommand pluginCommandTokenCommand = new TokenCommand();
-        Objects.requireNonNull(this.getCommand("tc")).setExecutor(pluginCommandTokenCommand);
 
         PortablePlayerMenu portablePlayerMenu = new PortablePlayerMenu(customDiscCommand, portablePlayerManager);
 
