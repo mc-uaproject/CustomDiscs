@@ -27,6 +27,7 @@ import org.codehaus.plexus.util.FileUtils;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
@@ -51,7 +52,7 @@ public class TokenDiscCommand {
 
             Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
                 try {
-                    URL fileURL = new URL(url);
+                    URL fileURL = URI.create(url).toURL();
                     if (filename.contains("../")) {
                         player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.INVALID_FILENAME.toString()));
                         return;
