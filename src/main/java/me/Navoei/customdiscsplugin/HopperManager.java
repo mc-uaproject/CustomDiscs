@@ -1,7 +1,5 @@
 package me.Navoei.customdiscsplugin;
 
-import io.papermc.paper.datacomponent.DataComponentTypes;
-import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import me.Navoei.customdiscsplugin.language.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -26,8 +24,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.Optional;
-
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -62,12 +58,14 @@ public class HopperManager implements Listener {
         NamespacedKey customSoundRangeKey = new NamespacedKey(customDiscs, "range");
 
         if(persistentDataContainer.has(customSoundRangeKey, PersistentDataType.FLOAT)) {
-            float soundRange = Optional.ofNullable(persistentDataContainer.get(customSoundRangeKey, PersistentDataType.FLOAT)).orElse(0f);
-            range = Math.min(soundRange, CustomDiscs.getInstance().musicDiscMaxDistance);
+            range = Math.min(persistentDataContainer.get(customSoundRangeKey, PersistentDataType.FLOAT), CustomDiscs.getInstance().musicDiscMaxDistance);
         }
-
-        if (!event.getItem().hasData(DataComponentTypes.TOOLTIP_DISPLAY) || !event.getItem().getData(DataComponentTypes.TOOLTIP_DISPLAY).hiddenComponents().contains(DataComponentTypes.JUKEBOX_PLAYABLE)) {
-            event.getItem().setData(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().addHiddenComponents(DataComponentTypes.JUKEBOX_PLAYABLE).build());
+        
+        if (discMeta.getJukeboxPlayable().isShowInTooltip()) {
+            JukeboxPlayableComponent jpc = discMeta.getJukeboxPlayable();
+            jpc.setShowInTooltip(false);
+            discMeta.setJukeboxPlayable(jpc);
+            event.getItem().setItemMeta(discMeta);
         }
 
         Path soundFilePath = Path.of(customDiscs.getDataFolder().getPath(), "musicdata", soundFileName);
