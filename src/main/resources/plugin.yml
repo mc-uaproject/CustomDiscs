@@ -16,16 +16,3 @@ dependencies:
       load: BEFORE
       required: true
       join-classpath: true
-commands:
-  tokendisk:
-    description: Create a music disc from a token.
-    usage: /<command>
-    permission: customdiscs.tokendisk
-  td:
-    description: Create a music disc from a token.
-    usage: /<command>
-    permission: customdiscs.tokendisk
-  disc:
-    description: Create a music disc from a file.
-    usage: /<command> <filename> <custom name>
-    permission: customdiscs.disc

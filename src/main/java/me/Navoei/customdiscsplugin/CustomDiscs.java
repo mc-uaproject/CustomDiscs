@@ -7,13 +7,18 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import de.maxhenkel.voicechat.api.BukkitVoicechatService;
+import de.maxhenkel.voicechat.api.*;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import me.Navoei.customdiscsplugin.command.CustomDiscCommand;
 import me.Navoei.customdiscsplugin.command.TokenDiscCommand;
+import me.Navoei.customdiscsplugin.portable.PortablePlayerRecipe;
 import me.Navoei.customdiscsplugin.event.JukeBox;
 import me.Navoei.customdiscsplugin.language.Lang;
+import me.Navoei.customdiscsplugin.listeners.HopperManager;
+import me.Navoei.customdiscsplugin.listeners.PortablePlayerListener;
+import me.Navoei.customdiscsplugin.portable.PortablePlayerManager;
+import me.Navoei.customdiscsplugin.portable.PortablePlayerMenu;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Jukebox;
 import org.bukkit.command.CommandSender;
@@ -22,6 +27,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
+
 import java.io.*;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -40,6 +46,9 @@ public final class CustomDiscs extends JavaPlugin {
     public float musicDiscDistance;
     public float musicDiscMaxDistance;
     public float musicDiscVolume;
+    private CustomDiscCommand customDiscCommand;
+    private PortablePlayerManager portablePlayerManager;
+    private PortablePlayerMenu portablePlayerMenu;
 
     @Override
     public void onLoad() {
@@ -48,7 +57,9 @@ public final class CustomDiscs extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        log = getLogger();
+        this.customDiscCommand = new CustomDiscCommand(this);
+        this.portablePlayerManager = PortablePlayerManager.instance();
+        this.portablePlayerMenu = new PortablePlayerMenu(customDiscCommand, portablePlayerManager);
 
         this.liteCommands = LiteBukkitFactory.builder("CustomDiscs", this)
                 .commands(
@@ -70,18 +81,10 @@ public final class CustomDiscs extends JavaPlugin {
         if (service != null) {
             voicechatPlugin = new VoicePlugin();
             service.registerPlugin(voicechatPlugin);
-            log.info("Successfully registered CustomDiscs plugin");
+            getLogger().info("Successfully registered CustomDiscs plugin");
         } else {
-            log.info("Failed to register CustomDiscs plugin");
+            getLogger().info("Failed to register CustomDiscs plugin");
         }
-
-        getServer().getPluginManager().registerEvents(new JukeBox(), this);
-        getServer().getPluginManager().registerEvents(new HopperManager(), this);
-
-        musicDiscDistance = Objects.requireNonNull(getConfig().getInt("music-disc-distance"));
-        musicDiscMaxDistance = Objects.requireNonNull(getConfig().getInt("music-disc-max-distance"));
-        musicDiscVolume = Float.parseFloat(Objects.requireNonNull(getConfig().getString("music-disc-volume")));
-
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
         protocolManager.addPacketListener(new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.WORLD_EVENT) {
@@ -106,6 +109,21 @@ public final class CustomDiscs extends JavaPlugin {
             }
         });
 
+        getServer().getPluginManager().registerEvents(new JukeBox(), this);
+        getServer().getPluginManager().registerEvents(new HopperManager(), this);
+        getServer().getPluginManager().registerEvents(new PortablePlayerListener(this, customDiscCommand, portablePlayerMenu, portablePlayerManager, this), this);
+
+        PortablePlayerRecipe recipe = new PortablePlayerRecipe(this);
+        recipe.registerRecipes();
+
+        PortablePlayerMenu portablePlayerMenu = new PortablePlayerMenu(customDiscCommand, portablePlayerManager);
+
+        musicDiscDistance = getConfig().getInt("music-disc-distance");
+        musicDiscMaxDistance = getConfig().getInt("music-disc-max-distance");
+        musicDiscVolume = Float.parseFloat(Objects.requireNonNull(getConfig().getString("music-disc-volume")));
+
+
+
     }
 
     @Override
@@ -115,7 +133,7 @@ public final class CustomDiscs extends JavaPlugin {
         }
         if (voicechatPlugin != null) {
             getServer().getServicesManager().unregister(voicechatPlugin);
-            log.info("Successfully unregistered CustomDiscs plugin");
+            getLogger().info("Successfully unregistered CustomDiscs plugin");
         }
     }
 

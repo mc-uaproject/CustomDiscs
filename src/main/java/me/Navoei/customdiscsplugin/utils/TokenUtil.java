@@ -1,7 +1,9 @@
 package me.Navoei.customdiscsplugin.utils;
 
+import me.Navoei.customdiscsplugin.CustomDiscs;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -32,12 +34,13 @@ public class TokenUtil {
     public static void grantToken(Player player) {
         ItemStack token = new ItemStack(Material.GLOWSTONE_DUST);
         ItemMeta itemMeta = token.getItemMeta();
-        itemMeta.displayName(Component.text("Токен косметики").color(NamedTextColor.GOLD));
+        itemMeta.displayName(Component.text("Токен Власної Платівки").color(NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
         List<Component> lore = List.of(
-                Component.text("Використовується, щоб створити платівку із вашим треком").color(NamedTextColor.GRAY),
-                Component.text("Приклад: ").color(NamedTextColor.GRAY).append(Component.text("/td https://direct-link-here.mp3 songName.mp3 MyCoolSong!").color(NamedTextColor.GOLD))
+                Component.text("Використовується, щоб створити платівку із вашим треком").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false),
+                Component.text("Приклад: ").color(NamedTextColor.GRAY).append(Component.text("/td https://direct-link-here.mp3 songName.mp3 MyCoolSong!").color(NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false))
         );
         itemMeta.lore(lore);
+        itemMeta.setItemModel(new NamespacedKey("customdiscs", "token"));
         itemMeta.getPersistentDataContainer().set(new NamespacedKey("customdiscs", "token"), PersistentDataType.STRING, "token");
         token.setItemMeta(itemMeta);
         if (player.getInventory().firstEmpty() == -1) {
