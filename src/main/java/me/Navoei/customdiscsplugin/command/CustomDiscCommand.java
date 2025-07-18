@@ -28,6 +28,9 @@ import org.codehaus.plexus.util.FileUtils;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
@@ -47,11 +50,13 @@ public class CustomDiscCommand {
     @Execute(name = "token")
     private void onTokenCommand(@Context CommandSender commandSender, @Arg Player player) {
         if (player == null) {
-            commandSender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.PLAYER_NOT_FOUND.toString()));
+            commandSender.sendMessage(createEnhancedMessage("❌", Lang.PLAYER_NOT_FOUND.toString(), NamedTextColor.RED));
         } else {
             TokenUtil.grantToken(player);
-            player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.TOKEN_GRANTED.toString()));
-            commandSender.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.TOKEN_GRANTED_OTHER.toString().replace("%player%", player.getName())));
+            
+            // Enhanced token granted message with visual effects
+            player.sendMessage(createEnhancedMessage("🎫", Lang.TOKEN_GRANTED_SUCCESS.toString(), NamedTextColor.GREEN));
+            commandSender.sendMessage(createEnhancedMessage("✅", Lang.TOKEN_GRANTED_TO_PLAYER.replace("%player%", player.getName()), NamedTextColor.GREEN));
         }
     }
 
@@ -60,12 +65,12 @@ public class CustomDiscCommand {
         ItemStack item = player.getInventory().getItemInMainHand();
 
         if (!isCustomDisc(item)) {
-            player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.NOT_HOLDING_DISC.toString()));
+            player.sendMessage(createEnhancedMessage("❌", Lang.MUST_HOLD_CUSTOM_DISC.toString(), NamedTextColor.RED));
             return;
         }
 
         if (range < 1 || range > this.plugin.musicDiscMaxDistance) {
-            player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.INVALID_RANGE.toString().replace("%range_value%", Float.toString(this.plugin.musicDiscMaxDistance))));
+            player.sendMessage(createEnhancedMessage("⚠️", Lang.INVALID_RANGE_DETAILED.replace("%max_range%", Float.toString(this.plugin.musicDiscMaxDistance)), NamedTextColor.RED));
             return;
         }
 
@@ -73,44 +78,65 @@ public class CustomDiscCommand {
         PersistentDataContainer data = meta.getPersistentDataContainer();
         data.set(new NamespacedKey(this.plugin, "range"), PersistentDataType.FLOAT, range);
         player.getInventory().getItemInMainHand().setItemMeta(meta);
-        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.CREATE_CUSTOM_RANGE.toString().replace("%custom_range%", Float.toString(range))));
+        
+        player.sendMessage(createEnhancedMessage("🎵", Lang.RANGE_SET_SUCCESS.replace("%range%", Float.toString(range)), NamedTextColor.GREEN));
     }
 
     @Execute(name = "download")
+    @Permission("customdiscs.download")
     private int onCommandDownload(@Context Player player, @Arg String url, @Arg String filename) {
+        // Show initial validation message
+        player.sendMessage(createEnhancedMessage("🔍", Lang.VALIDATING_REQUEST.toString(), NamedTextColor.BLUE));
+        
         Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
             try {
-                URL fileURL = new URL(url);
-                if (filename.contains("../")) {
-                    player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.INVALID_FILENAME.toString()));
-                    return;
-                }
-
-                if (!getFileExtension(filename).equals("wav") && !getFileExtension(filename).equals("mp3") && !getFileExtension(filename).equals("flac")) {
-                    player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.INVALID_FORMAT.toString()));
-                    return;
-                }
-
-                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.DOWNLOADING_FILE.toString()));
-
-                URLConnection connection = fileURL.openConnection();
-                if (connection != null) {
-                    long size = connection.getContentLengthLong() / 1048576;
-                    if (size > this.plugin.getConfig().getInt("max-download-size", 50)) {
-                        player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.FILE_TOO_LARGE.toString().replace("%max_download_size%", String.valueOf(this.plugin.getConfig().getInt("max-download-size", 50)))));
+                try {
+                    URI uri = new URI(url);
+                    URL fileURL = uri.toURL();
+                    
+                    if (filename.contains("../")) {
+                        player.sendMessage(createEnhancedMessage("❌", Lang.INVALID_PATH_TRAVERSAL.toString(), NamedTextColor.RED));
                         return;
                     }
+
+                    String extension = getFileExtension(filename);
+                    if (!extension.equals("wav") && !extension.equals("mp3") && !extension.equals("flac")) {
+                        player.sendMessage(createEnhancedMessage("⚠️", Lang.INVALID_FORMAT_DETAILED.toString(), NamedTextColor.RED));
+                        return;
+                    }
+
+                    // Show download starting message with progress indicators
+                    player.sendMessage(createEnhancedMessage("💼", Lang.STARTING_DOWNLOAD.replace("%filename%", filename), NamedTextColor.YELLOW));
+
+                    URLConnection connection = fileURL.openConnection();
+                    if (connection != null) {
+                        long size = connection.getContentLengthLong() / 1048576;
+                        if (size > this.plugin.getConfig().getInt("max-download-size", 50)) {
+                            player.sendMessage(createEnhancedMessage("🚫", Lang.FILE_TOO_LARGE.replace("%max_download_size%", String.valueOf(this.plugin.getConfig().getInt("max-download-size", 50))), NamedTextColor.RED));
+                            return;
+                        }
+                        
+                        if (size > 0) {
+                            player.sendMessage(createEnhancedMessage("📊", Lang.FILE_SIZE_DISPLAY.replace("%size%", String.valueOf(size)), NamedTextColor.BLUE));
+                        }
+                    }
+
+                    Path downloadPath = Path.of(this.plugin.getDataFolder().getPath(), "musicdata", filename);
+                    File downloadFile = downloadPath.toFile();
+                    FileUtils.copyURLToFile(fileURL, downloadFile);
+
+                    // Success messages
+                    player.sendMessage(createEnhancedMessage("✨", Lang.DOWNLOAD_SUCCESS.toString(), NamedTextColor.GREEN));
+                    player.sendMessage(createEnhancedMessage("💾", Lang.FILE_SAVED_AS.replace("%filename%", filename), NamedTextColor.GRAY));
+                    player.sendMessage(createEnhancedMessage("🎵", Lang.CREATE_DISC_INSTRUCTION.replace("%filename%", filename), NamedTextColor.YELLOW));
+                        
+                } catch (URISyntaxException | MalformedURLException e) {
+                    player.sendMessage(createEnhancedMessage("❌", Lang.INVALID_URL_FORMAT.toString(), NamedTextColor.RED));
+                    this.plugin.getLogger().warning("Download failed due to invalid URL: " + url + " - " + e.getMessage());
                 }
-
-                Path downloadPath = Path.of(this.plugin.getDataFolder().getPath(), "musicdata", filename);
-                File downloadFile = new File(downloadPath.toUri());
-                FileUtils.copyURLToFile(fileURL, downloadFile);
-
-                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.SUCCESSFUL_DOWNLOAD.toString().replace("%file_path%", "plugins/CustomDiscs/musicdata/" + filename)));
-                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.CREATE_DISC.toString().replace("%filename%", filename)));
             } catch (IOException e) {
-                player.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX + Lang.DOWNLOAD_ERROR.toString()));
-                e.printStackTrace();
+                player.sendMessage(createEnhancedMessage("🚫", Lang.DOWNLOAD_ACCESS_ERROR.toString(), NamedTextColor.RED));
+                this.plugin.getLogger().warning("Download failed for file: " + filename + " - " + e.getMessage());
             }
         });
 
@@ -179,6 +205,17 @@ public class CustomDiscCommand {
 
     public static boolean isMusicDisc(ItemStack item) {
         return item.getType().toString().contains("MUSIC_DISC");
+    }
+    
+    private Component createEnhancedMessage(String emoji, String message, NamedTextColor color) {
+        Component prefix = LegacyComponentSerializer.legacyAmpersand().deserialize(Lang.PREFIX.toString());
+        Component enhancedMessage = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+        
+        return Component.text()
+            .append(prefix)
+            .append(Component.text(emoji + " ", NamedTextColor.GOLD))
+            .append(enhancedMessage)
+            .build();
     }
 
     @Execute

@@ -41,7 +41,24 @@ public enum Lang {
     DISC_CREATED("disc-created", "&aКастомний диск успішно створено!"),
     ERROR_DETAILS("error-details", "&cДеталі помилки: &f%error%"),
     CHECK_URL("check-url", "&cПеревірте, будь ласка, що URL-адреса правильна і файл доступний."),
-    TOKEN_REQUIRED("token-required", "&cВам потрібен токен, щоб створити кастомний диск. Запитайте адміністратора.");
+    TOKEN_REQUIRED("token-required", "&cВам потрібен токен, щоб створити кастомний диск. Запитайте адміністратора."),
+    
+    // Enhanced UI messages
+    VALIDATING_REQUEST("validating-request", "&7Перевірка запиту на завантаження..."),
+    INVALID_PATH_TRAVERSAL("invalid-path-traversal", "&cНевірна назва файлу! Обхід шляху не дозволено."),
+    INVALID_FORMAT_DETAILED("invalid-format-detailed", "&cНевірний формат! Підтримувані: &fwav, mp3, flac"),
+    STARTING_DOWNLOAD("starting-download", "&eПочинаємо завантаження: &b%filename%"),
+    FILE_SIZE_DISPLAY("file-size-display", "&7Розмір файлу: &b%size%МБ"),
+    DOWNLOAD_SUCCESS("download-success", "&aЗавантаження завершено успішно!"),
+    FILE_SAVED_AS("file-saved-as", "&7Файл збережено як: &f%filename%"),
+    CREATE_DISC_INSTRUCTION("create-disc-instruction", "&eВикористовуйте &b/customdisc create %filename% <назва_пісні>&e для створення диску!"),
+    INVALID_URL_FORMAT("invalid-url-format", "&cНевірний формат URL! Перевірте URL-адресу."),
+    DOWNLOAD_ACCESS_ERROR("download-access-error", "&cПомилка завантаження! Перевірте доступність файлу."),
+    RANGE_SET_SUCCESS("range-set-success", "&aДіапазон встановлено на &b%range%&a блоків!"),
+    INVALID_RANGE_DETAILED("invalid-range-detailed", "&cНевірний діапазон! Має бути від &f1&c до &f%max_range%"),
+    MUST_HOLD_CUSTOM_DISC("must-hold-custom-disc", "&cВи повинні тримати кастомний диск!"),
+    TOKEN_GRANTED_SUCCESS("token-granted-success", "&aТокен видано! Тепер ви можете створити кастомний диск!"),
+    TOKEN_GRANTED_TO_PLAYER("token-granted-to-player", "&aТокен видано гравцю &b%player%&a!");
 
     private final String path;
     private final String def;
